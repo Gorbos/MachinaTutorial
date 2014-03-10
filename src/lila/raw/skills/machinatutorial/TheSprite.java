@@ -5,8 +5,10 @@ import java.util.Random;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class TheSprite {
+	String TAG = "TheSprite";
 	// direction = 0 up, 1 left, 2 down, 3 right,
     // animation = 3 back, 1 left, 0 front, 2 right
     int[] DIRECTION_TO_ANIMATION_MAP = { 3, 1, 0, 2 };
@@ -21,6 +23,9 @@ public class TheSprite {
     private int currentFrame = 0;
     private int width;
     private int height;
+    
+    public Integer userX = 0;
+    public Integer userY = 0;
    
     public TheSprite(TheGame tg, Bitmap bmp) {
           this.tg=tg;
@@ -31,18 +36,22 @@ public class TheSprite {
           Random rnd = new Random(System.currentTimeMillis());
           x = rnd.nextInt(tg.getWidth() - width);
           y = rnd.nextInt(tg.getHeight() - height);
-          xSpeed = rnd.nextInt(10)-5;
-          ySpeed = rnd.nextInt(10)-5;
+          
+//          x = tg.getWidth() / 2;
+//          y = tg.getHeight() / 2;
+          
+          xSpeed = 7;
+          ySpeed = 7;
     }
 
     private void update() {
-//          if (x > tg.getWidth() - bmp.getWidth() - xSpeed) {
-//                 xSpeed = -5;
-//          }
-//          if (x + xSpeed< 0) {
-//                 xSpeed = 5;
-//          }
-//          x = x + xSpeed;
+          if (x > tg.getWidth() - bmp.getWidth() - xSpeed) {
+                 xSpeed = -5;
+          }
+          if (x + xSpeed< 0) {
+                 xSpeed = 5;
+          }
+          x = x + xSpeed;
     	  if (x > tg.getWidth() - width - xSpeed || x + xSpeed < 0) {
 	             xSpeed = -xSpeed;
 	      }
@@ -51,7 +60,34 @@ public class TheSprite {
 	             ySpeed = -ySpeed;
 	      }
 	      y = y + ySpeed;
-          currentFrame = ++currentFrame % BMP_COLUMNS;
+    	
+//    	
+//    	if(x < userX && y < userY){
+//    		x = x + xSpeed;
+//    		y = y + ySpeed;
+//
+//    			
+//    	}
+//    	else if(x < userX && y > userY){
+//    		x = x + xSpeed;
+//    		y = y - ySpeed;
+//    	}
+//    	else if(x > userX && y < userY){
+//    		x = x - xSpeed;
+//    		y = y + ySpeed;
+//    	}
+//    	else if(x > userX && y > userY){
+//    		x = x - xSpeed;
+//    		y = y - ySpeed;
+//    	}
+    	//else if(x)
+    	
+    	
+    	
+    	
+    	//Log.i(TAG, x+"|"+userX);
+    	
+         currentFrame = ++currentFrame % BMP_COLUMNS;
     }
    
     public void onDraw(Canvas canvas) {
@@ -71,5 +107,14 @@ public class TheSprite {
           double dirDouble = (Math.atan2(xSpeed, ySpeed) / (Math.PI / 2) + 2);
           int direction = (int) Math.round(dirDouble) % BMP_ROWS;
           return DIRECTION_TO_ANIMATION_MAP[direction];
+    }
+    
+    private int setDirection(int i){
+    	
+    	return i;
+    }
+    
+    public boolean isCollition(float x2, float y2) {
+        return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
     }
 }
